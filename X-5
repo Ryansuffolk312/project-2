@@ -1,0 +1,151 @@
+Enter file contents here////////Ryan Rosario
+//////// X5/M0
+/////// Global/Variables
+
+String title= "Project 2 - Pool Table/Elastic Collisions" ;
+String author= "Ryan Rosario";
+
+float left, right, top, bottom;
+float middle;
+float cueX, cueY, cueDX, cueDY;
+float redX,  redY,  redDX,  redDY;
+float yelX,  yelY,  yelDX,  yelDY;
+float bluX, bluY, bluDX, bluDY;
+
+////SETUP
+void setup(){
+  size(700,500);
+  frameRate(60);
+  left= 80;
+  right= width-80;
+  top= 65;
+  bottom= height-80;
+  middle= right - left/2;
+  //
+  reset();
+}
+
+void reset() {
+  //Cue ball at rest.
+  cueX= 184;
+  cueY= 230;
+  cueDX=0; cueDY=0;
+  //Set positions
+  redX= 454;    redY= 222;
+  yelX= 474;    yelY= 201;
+  bluX= 471;    bluY= 254;
+  //Random speeds
+  redDX=  ( 0 );   redDY=  ( 0 );
+  yelDX=  ( 0 );   redDY=  ( 0 );
+  bluDX=  ( 0 );   bluDY=  ( 0 );  
+}
+
+////table, collisions, bounce
+void draw() {
+  background( 250,250,200 );
+  rectMode( CORNERS );
+  table( left, top, right, bottom );
+  bounce();
+  collisions();
+  show();
+  messages();
+  //frame.setTitle (mouseX + ","+mouseY);        //// shows pixel points,plan out-
+                                               ////-placement of balls and table
+}
+
+//// draw table with borders
+void table( float left, float top, float right, float bottom ) {
+  fill(#18C995);       //green-blue pool table
+  strokeWeight(20);
+  stroke( #A06D08 );   //brown borders
+  rect( left-20, top-20, right+20, bottom+20);
+  stroke(0);
+  strokeWeight(1);
+}
+
+////Action
+//// ACTION:  bounce off walls, collisions
+void bounce() {
+  redX += redDX;  if ( redX<left || redX>right ) redDX *= -1;
+  redY += redDY;  if ( redY<top || redY>bottom ) redDY *=  -1;
+
+  yelX += yelDX;  if ( yelX<left || yelX>right ) yelDX *= -1;
+  yelY += yelDY;  if ( yelY<top || yelY>bottom ) yelDY *=  -1;
+
+
+  bluX += bluDX;  if ( bluX<left || bluX>right ) bluDX *= -1;
+  bluY += bluDY;  if ( bluY<top || bluY>bottom ) bluDY *=  -1;
+
+  cueX += cueDX;  if ( cueX<left || cueX>right ) cueDX *= -1;
+  cueY += cueDY;  if ( cueY<top || cueY>bottom ) cueDY *=  -1;
+}
+void collisions() {
+  float tmp;
+  // Swap velocities!
+  if ( dist( redX,redY, yelX,yelY ) < 30 ) {
+    tmp=yelDX;  yelDX=redDX;  redDX=tmp;
+    tmp=yelDY;  yelDY=redDY;  redDY=tmp;
+  }
+  if ( dist( redX,redY, bluX,bluY ) < 30 ) {
+    tmp=bluDX;  bluDX=redDX;  redDX=tmp;
+    tmp=bluDY;  bluDY=redDY;  redDY=tmp;
+  }
+  if ( dist( yelX,yelY, bluX,bluY ) < 30 ) {
+    tmp=bluDX;  bluDX=yelDX;  yelDX=tmp;
+    tmp=bluDY;  bluDY=yelDY;  yelDY=tmp;
+  }
+  // Cue ball hits R,Y,B.
+  if ( dist( cueX,cueY, redX,redY ) < 30 ) {
+    tmp=redDX;  redDX=cueDX;  cueDX=tmp;
+    tmp=redDY;  redDY=cueDY;  cueDY=tmp;
+  }
+  if ( dist( cueX,cueY, yelX,yelY ) < 30 ) {
+    tmp=yelDX;  yelDX=cueDX;  cueDX=tmp;
+    tmp=yelDY;  yelDY=cueDY;  cueDY=tmp;
+  }
+  if ( dist( cueX,cueY, bluX,bluY ) < 30 ) {
+    tmp=bluDX;  bluDX=cueDX;  cueDX=tmp;
+    tmp=bluDY;  bluDY=cueDY;  cueDY=tmp;
+  }
+}
+
+////Show - messages and balls
+void show() {
+  fill( #FC1717 );    ellipse( redX, redY, 30, 30 );
+  fill( #F8FC17 );    ellipse( yelX, yelY, 30,30 );
+  fill( #1720FC );    ellipse( bluX, bluY, 30, 30);
+  fill(255);          ellipse( cueX, cueY, 30, 30);
+}
+void messages() {
+  fill(0);
+  text( title, width/3, 20 );
+  text( author, 10, height-10 );
+}
+///// Keys and Clicks
+void keyPressed() {
+  if (key == 'r') {
+    reset();
+  }
+}
+void mousePressed() {
+  //// hit the cue ball -- distance = force
+  float force=  dist( mouseX,mouseY, cueX,cueY ) / 20;
+  strokeWeight( force );
+  line( mouseX,mouseY, cueX,cueY );
+  strokeWeight(1);
+  //
+  cueDX=  (cueX-mouseX) / 30;
+  cueDY=  (cueY-mouseY) / 30;
+}
+
+
+ 
+
+  
+  
+  
+  
+
+
+
+
